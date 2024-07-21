@@ -1,20 +1,23 @@
-﻿using General.Domain;
-using System.Linq;
+﻿using General.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.Reflection;
 
 namespace Games.Persistence {
-    public class GamesContext(ISender sender) : DbContext {
-        public async override Task<int> SaveChangesAsync(CancellationToken token = default) {
-            var events = ChangeTracker.Entries<Entity>()
-                 .Select(x => x.Entity)
-                 .SelectMany(x => x.Events);
+    public class GamesContext(
+        ISender sender, 
+        IConfiguration configuration) : EventsDbContext(sender) {
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+            base.OnConfiguring(optionsBuilder);
+            var connectionString = configuration.GetConnectionString("Connection");
+            optionsBuilder.UseMySql(connectionString, 
+                new MySqlServerVersion(new Version(8, 0, 36)));
+        }
 
-            foreach (var notification in events) {
-                await sender.Send(notification, token);
-            }
-
-            return await base.SaveChangesAsync(token);
+        protected override void OnModelCreating(ModelBuilder builder) {
+            base.OnModelCreating(builder);
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }
 }

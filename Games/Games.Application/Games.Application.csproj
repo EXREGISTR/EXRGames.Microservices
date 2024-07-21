@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Handlers\Tags\" />
+    <Folder Include="Handlers\UserGames\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\General\General.Contracts\General.Contracts.csproj" />
+    <ProjectReference Include="..\Games.Contracts\Games.Contracts.csproj" />
+    <ProjectReference Include="..\Games.Domain\Games.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

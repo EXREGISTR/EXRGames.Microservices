@@ -1,0 +1,29 @@
+version: '3.4'
+
+services:
+  games.api:
+    image: ${DOCKER_REGISTRY-}gamesapi
+    container_name: Games.API
+    build:
+      context: .
+      dockerfile: Games/Games.API/Dockerfile
+
+  games.database:
+    image: mysql:latest
+    container_name: Games.Database
+    environment:
+        MYSQL_DATABASE: exrgames.games
+        MYSQL_USER: EXREGISTR
+        MYSQL_ROOT_PASSWORD: oxymiron69
+    volumes:
+      - mysql-data:/var/lib/mysql
+        
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: RabbitMQ
+    ports:
+        - 5672:5672
+        - 15672:15672
+
+volumes:
+  mysql-data:

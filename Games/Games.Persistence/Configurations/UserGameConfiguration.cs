@@ -3,9 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Games.Persistence.Configurations {
-    internal class GameUserConfiguration : IEntityTypeConfiguration<UserGame> {
+    internal class UserGameConfiguration : IEntityTypeConfiguration<UserGame> {
         public void Configure(EntityTypeBuilder<UserGame> builder) {
             builder.ToTable("user_games");
+
+            builder.HasKey(x => new { x.UserId, x.GameId });
 
             builder.Property(x => x.UserId)
                 .HasColumnName("UserId")

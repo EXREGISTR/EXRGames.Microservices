@@ -1,7 +1,6 @@
-﻿using FluentValidation;
-using Games.Domain.Games;
+﻿using Games.Domain.Games;
 using General.Contracts;
-using General.Domain;
+using General.Domain.Results;
 
 namespace Games.Contracts.Requests.Games {
     public class CreateGameCommand : ICommand<Result<int>> {

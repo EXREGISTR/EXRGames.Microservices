@@ -5,19 +5,19 @@ using Microsoft.EntityFrameworkCore.Storage;
 using System.Data;
 
 namespace General.Persistence {
-    public abstract class EventsDbContext : DbContext, IUnitOfWork {
+    public abstract class EXRGamesDbContext : DbContext, IUnitOfWork {
         private readonly ISender sender;
 
-        protected EventsDbContext() => sender = null!;
+        protected EXRGamesDbContext() => sender = null!;
 
-        protected EventsDbContext(ISender sender) {
+        protected EXRGamesDbContext(ISender sender) {
             this.sender = sender;
         }
 
         public IDbTransaction BeginTransaction(IsolationLevel level = IsolationLevel.ReadCommitted) 
             => Database.BeginTransaction(level).GetDbTransaction();
 
-        public async override Task<int> SaveChangesAsync(CancellationToken token = default) {
+        public async Task<int> SaveChanges(CancellationToken token = default) {
             var events = ChangeTracker.Entries<IEntity>()
                  .Select(x => x.Entity)
                  .SelectMany(x => {

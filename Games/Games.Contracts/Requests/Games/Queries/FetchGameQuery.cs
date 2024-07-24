@@ -1,8 +1,8 @@
 ﻿using Games.Domain.Games;
-using MediatR;
+using General.Contracts;
 
 namespace Games.Contracts.Requests.Games {
-    public class FetchGameQuery : IRequest<Game> {
+    public class FetchGameQuery : IQuery<Game> {
         public int Id { get; set; }
     }
 }

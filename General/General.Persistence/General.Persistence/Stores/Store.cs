@@ -5,8 +5,7 @@ namespace General.Persistence.Stores {
     public abstract class Store<TEntity>(DbContext context) : IStore<TEntity> where TEntity : class, IAggregateRoot {
         protected DbSet<TEntity> Table => context.Set<TEntity>();
 
-        public virtual void Create(TEntity entity) 
-            => Table.Add(entity);
+        public virtual void Create(TEntity entity) => Table.Add(entity);
 
         public Task<TEntity?> Fetch(ISpecification<TEntity> specification, CancellationToken token = default) {
             var table = Table.AsNoTracking()

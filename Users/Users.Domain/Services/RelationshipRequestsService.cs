@@ -1,8 +1,9 @@
-﻿using General.Domain;
+﻿using General.Domain.Results;
 using Users.Domain.Relationships;
 using Users.Domain.Relationships.Specifications;
 
-namespace Users.Domain.Services {
+namespace Users.Domain.Services
+{
     public class RelationshipRequestsService(
         IUserRelationshipsStore store) {
         public async Task<Result> SendRequest(string senderId, string targetId, CancellationToken token = default) {

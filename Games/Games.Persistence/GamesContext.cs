@@ -5,13 +5,12 @@ using Microsoft.Extensions.Configuration;
 using System.Reflection;
 
 namespace Games.Persistence {
-    public class GamesContext(
+    internal class GamesContext(
         ISender sender, 
-        IConfiguration configuration) : EventsDbContext(sender) {
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            base.OnConfiguring(optionsBuilder);
+        IConfiguration configuration) : EXRGamesDbContext(sender) {
+        protected override void OnConfiguring(DbContextOptionsBuilder options) {
             var connectionString = configuration.GetConnectionString("Connection");
-            optionsBuilder.UseMySql(connectionString, 
+            options.UseMySql(connectionString, 
                 new MySqlServerVersion(new Version(8, 0, 36)));
         }
 

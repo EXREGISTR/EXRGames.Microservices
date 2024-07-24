@@ -7,16 +7,18 @@ services:
     build:
       context: .
       dockerfile: Games/Games.API/Dockerfile
+    ports:
+        - 8080:8080
+        - 8081:8081 
 
   games.database:
     image: mysql:latest
     container_name: Games.Database
     environment:
-        MYSQL_DATABASE: exrgames.games
-        MYSQL_USER: EXREGISTR
+        MYSQL_DATABASE: exrgames_games
         MYSQL_ROOT_PASSWORD: oxymiron69
     volumes:
-      - mysql-data:/var/lib/mysql
+       - mysql-data:/var/lib/mysql
         
   rabbitmq:
     image: rabbitmq:management

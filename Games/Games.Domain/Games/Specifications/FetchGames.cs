@@ -30,21 +30,21 @@ namespace Games.Domain.Games.Specifications {
             maxPrice ??= decimal.MaxValue;
 
             if (maxPrice == decimal.Zero) {
-                Where(x => x.Price == decimal.Zero);
+                Where(x => x.Price.Value == decimal.Zero);
                 return;
             }
 
             if (minPrice == maxPrice) {
-                Where(game => game.Price == maxPrice);
+                Where(game => game.Price.Value == maxPrice);
                 return;
             }
 
             if (minPrice > decimal.Zero) {
-                Where(x => x.Price >= minPrice);
+                Where(x => x.Price.Value >= minPrice);
             }
 
             if (maxPrice < decimal.MaxValue) {
-                Where(x => x.Price <= maxPrice);
+                Where(x => x.Price.Value <= maxPrice);
             }
         }
 

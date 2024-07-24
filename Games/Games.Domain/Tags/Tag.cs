@@ -1,5 +1,6 @@
 ﻿using General.Domain;
 using General.Domain.Contracts;
+using General.Domain.Results;
 
 namespace Games.Domain.Tags {
     public class Tag : Entity<int>, IAggregateRoot {
@@ -10,7 +11,8 @@ namespace Games.Domain.Tags {
 
         public static Result<Tag> Create(string name) {
             if (string.IsNullOrWhiteSpace(name)) {
-                return "Empty name!";
+                var error = Error.Create(title: "Empty name!");
+                return FailureResult.Create(error);
             }
 
             var tag = new Tag(name.ToLower());

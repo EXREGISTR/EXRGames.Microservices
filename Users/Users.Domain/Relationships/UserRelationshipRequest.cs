@@ -1,7 +1,9 @@
 ﻿using General.Domain;
 using General.Domain.Contracts;
+using General.Domain.Results;
 
-namespace Users.Domain.Relationships {
+namespace Users.Domain.Relationships
+{
     public class UserRelationshipRequest : Entity, IAggregateRoot {
         public string SenderId { get; private set; } = string.Empty;
         public string AcceptorId { get; private set; } = string.Empty;
@@ -67,7 +69,7 @@ namespace Users.Domain.Relationships {
             if (acceptorSentRequest) {
                 acceptorRelationship.Accept();
                 store.Update(acceptorRelationship, token);
-                await unitOfWork.SaveChangesAsync(token);
+                await unitOfWork.SaveChanges(token);
             }
 
             var result = UserRelationshipRequest.Create(senderId, targetId);
@@ -83,7 +85,7 @@ namespace Users.Domain.Relationships {
             }
 
             store.Create(result.Value!, token);
-            await unitOfWork.SaveChangesAsync(token);
+            await unitOfWork.SaveChanges(token);
         }
     }
 }

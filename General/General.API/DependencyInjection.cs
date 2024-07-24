@@ -4,8 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace General.API {
-    public static class ServiceCollectionExtensions {
-        public static IServiceCollection AddMassTransitWithRabbitMQ(this IServiceCollection services) {
+    public static class DependencyInjection {
+        public static void AddMassTransitWithRabbitMQ(this IServiceCollection services) {
             services.AddMassTransit(options => {
                 options.AddConsumers(Assembly.GetEntryAssembly());
 
@@ -27,8 +27,6 @@ namespace General.API {
                     });
                 });
             });
-
-            return services;
         }
     }
 }

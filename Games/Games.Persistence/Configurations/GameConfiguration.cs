@@ -24,9 +24,12 @@ namespace Games.Persistence.Configurations {
                 .HasColumnName("Description")
                 .IsRequired();
 
-            builder.Property(x => x.Price)
-                .HasColumnName("Price")
-                .IsRequired();
+            builder.OwnsOne(x => x.Price, propertyBuilder => {
+                propertyBuilder
+                    .Property(price => price.Value)
+                    .HasColumnName("Price")
+                    .IsRequired();
+            });
 
             builder.HasMany(x => x.Tags)
                 .WithMany()

@@ -9,7 +9,6 @@
   <ItemGroup>
     <Folder Include="Requests\UserGames\Commands\" />
     <Folder Include="Requests\UserGames\Queries\" />
-    <Folder Include="Responses\UserGames\" />
   </ItemGroup>
 
   <ItemGroup>

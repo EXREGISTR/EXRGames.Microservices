@@ -7,7 +7,7 @@
             => value ?? throw new NullReferenceException("Impossible get the value if exists errors!");
         
         public FailureResult Error
-            => !IsSuccess ? error!.Value : throw new NullReferenceException("No errors!");
+            => IsFailure ? error!.Value : throw new NullReferenceException("No errors!");
 
         private Result(T value) {
             this.value = value;
@@ -17,7 +17,8 @@
             this.error = error;
         }
 
-        public bool IsSuccess => error == null || !error.Value.Messages.Any();
+        public bool IsSuccess => !IsFailure;
+        public bool IsFailure => error != null && error.Value.Messages.Any();
 
         public static Result<T> Success(T value)
             => new(value);
@@ -33,10 +34,15 @@
     }
 
     public readonly record struct Result {
-        public FailureResult? Error { get; }
-        public bool IsSuccess => Error == null;
+        private readonly FailureResult? error;
 
-        private Result(FailureResult error) => Error = error;
+        public FailureResult Error
+            => IsFailure ? error!.Value : throw new NullReferenceException("No errors!");
+        
+        public bool IsSuccess => !IsFailure;
+        public bool IsFailure => error != null && error.Value.Messages.Any();
+
+        private Result(FailureResult error) => this.error = error;
 
         public static Result Success => default;
         public static Result Failure(FailureResult result) => new(result);

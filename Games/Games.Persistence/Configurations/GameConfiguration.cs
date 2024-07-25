@@ -1,5 +1,5 @@
 ﻿using Games.Domain;
-using Games.Domain.Games;
+using Games.Domain.Game;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

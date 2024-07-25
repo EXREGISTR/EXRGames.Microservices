@@ -1,7 +1,7 @@
 ﻿using General.Domain.Specifications;
 using System.Linq.Expressions;
 
-namespace Games.Domain.Games.Specifications {
+namespace Games.Domain.Game.Specifications {
     public class FetchGames : Specification<Game> {
         public FetchGames(
             string? search,

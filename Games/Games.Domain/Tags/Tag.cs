@@ -1,6 +1,7 @@
 ﻿using General.Domain;
 using General.Domain.Contracts;
 using General.Domain.Results;
+using System.Net;
 
 namespace Games.Domain.Tags {
     public class Tag : Entity<int>, IAggregateRoot {
@@ -11,8 +12,10 @@ namespace Games.Domain.Tags {
 
         public static Result<Tag> Create(string name) {
             if (string.IsNullOrWhiteSpace(name)) {
-                var error = Error.Create(title: "Empty name!");
-                return FailureResult.Create(error);
+                var error = Error.Create(
+                    title: "Invalid tag!", 
+                    details: "Tag shouldn't has empty characters");
+                return FailureResult.Create(error, HttpStatusCode.BadRequest);
             }
 
             var tag = new Tag(name.ToLower());

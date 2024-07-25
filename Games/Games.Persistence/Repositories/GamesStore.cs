@@ -1,4 +1,4 @@
-﻿using Games.Domain.Games;
+﻿using Games.Domain.Game;
 using General.Persistence.Stores;
 using Microsoft.EntityFrameworkCore;
 

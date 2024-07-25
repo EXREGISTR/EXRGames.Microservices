@@ -1,14 +1,16 @@
 ﻿using Games.Contracts.Requests.Games;
-using Games.Contracts.Responses.Games;
-using Games.Domain.Games;
+using Games.Domain.Game;
 using General.Contracts;
 using General.Domain;
+using General.Domain.Extensions;
+using General.Domain.Results;
 
 namespace Games.Application.Handlers.Games {
-    public class FetchGamesHandler(IGamesStore store) : IQueryHandler<FetchGamesQuery, GamesResponse> {
-        public async Task<GamesResponse> Handle(FetchGamesQuery request, CancellationToken token) {
-            var games = await store.FetchEntities(request.Page, request.Size, token);
-            return new(games);
+    internal class FetchGamesHandler(IGamesStore store) 
+        : IQueryHandler<FetchGamesQuery, Result<PagedEnumerable<Game>>> {
+        public async Task<Result<PagedEnumerable<Game>>> Handle(FetchGamesQuery request, CancellationToken token) {
+            var result = await store.FetchEntities(request.Page, request.Size, token);
+            return result;
         }
     }
 }

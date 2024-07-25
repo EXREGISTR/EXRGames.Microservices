@@ -1,19 +1,14 @@
-﻿using System.Net;
-
-namespace General.Domain.Results {
+﻿namespace General.Domain.Results {
     public readonly record struct Error {
         public string Title { get; }
-        public string Description { get; }
-        public HttpStatusCode Code { get; }
+        public string Details { get; }
 
-        private Error(string title, string description, HttpStatusCode code) {
+        private Error(string title, string details) {
             Title = title;
-            Description = description;
-            Code = code;
+            Details = details;
         }
 
-        public static Error Create(string title = "Error", string description = "Error has occurred",
-            HttpStatusCode code = HttpStatusCode.InternalServerError) 
-            => new(title, description, code);
+        public static Error Create(string title = "Error", string details = "No details") 
+            => new(title, details);
     }
 }

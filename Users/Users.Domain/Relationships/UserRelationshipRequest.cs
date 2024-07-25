@@ -1,9 +1,11 @@
 ﻿using General.Domain;
 using General.Domain.Contracts;
 using General.Domain.Results;
+using System.Net;
+using Users.Domain.Relationships.Specifications;
+using Users.Domain.Services;
 
-namespace Users.Domain.Relationships
-{
+namespace Users.Domain.Relationships {
     public class UserRelationshipRequest : Entity, IAggregateRoot {
         public string SenderId { get; private set; } = string.Empty;
         public string AcceptorId { get; private set; } = string.Empty;
@@ -20,12 +22,14 @@ namespace Users.Domain.Relationships
                 AcceptorId = acceptorId
             };
 
-            return Result<UserRelationshipRequest>.Success(relationship);
+            return relationship;
         }
 
         public Result Accept() {
             if (Status != null) {
-                return "Request already accepted";
+                return FailureResult.Create(
+                    Error.Create(title: "Request already accepted"),
+                    HttpStatusCode.Conflict);
             }
 
             Status = UserRelationshipStatus.Friend;
@@ -34,7 +38,11 @@ namespace Users.Domain.Relationships
 
         public Result UpdateStatus(UserRelationshipStatus status) {
             if (Status == null) {
-                return "Impossible to update status if users has not relationship";
+                return FailureResult.Create(
+                    Error.Create(
+                        title: "Update status error", 
+                        details: "Impossible to update status if users has not relationship"), 
+                    HttpStatusCode.Conflict);
             }
 
             Status = status;
@@ -44,48 +52,28 @@ namespace Users.Domain.Relationships
 
     public class SendRequest(
         IUserRelationshipsStore store,
-        IUnitOfWork unitOfWork) {
+        IUnitOfWork unitOfWork,
+        RelationshipRequestsService service) {
 
-        public async Task Handle(string senderId, string acceptorId, CancellationToken token = default) {
-            if (senderId == acceptorId) return;
+        public async Task<Result> Handle(string senderId, string acceptorId, CancellationToken token = default) {
+            if (senderId == acceptorId) return FailureResult.Create(
+                Error.Create(title: "Incorrect ids", details: "Sender id is equal acceptor id"),
+                HttpStatusCode.BadRequest);
 
-            var tempRelationship = await store.Fetch(senderId, acceptorId, token);
-            if (tempRelationship != null) return;
+            var specification = new FetchUserRelationship(senderId, acceptorId);
+            var tempRelationshipResult = await store.Fetch(specification, token);
+            if (tempRelationshipResult.IsFailure) return tempRelationshipResult.Error;
 
             var transaction = unitOfWork.BeginTransaction();
 
             try {
-                await CreateFriends(senderId, acceptorId, token);
+                await service.SendRequest(senderId, acceptorId, token);
                 transaction.Commit();
-            } catch (Exception) {
+                return Result.Success;
+            } catch (Exception exception) {
                 transaction.Rollback();
+                return FailureResult.InternalServerError(exception.Message);
             }
-        }
-
-        private async Task CreateFriends(string senderId, string targetId, CancellationToken token) {
-            var acceptorRelationship = await store.Fetch(targetId, senderId, token);
-            var acceptorSentRequest = acceptorRelationship != null;
-
-            if (acceptorSentRequest) {
-                acceptorRelationship.Accept();
-                store.Update(acceptorRelationship, token);
-                await unitOfWork.SaveChanges(token);
-            }
-
-            var result = UserRelationshipRequest.Create(senderId, targetId);
-
-            if (!result.IsSuccess) {
-                throw new Exception(result.Error);
-            }
-
-            var request = result.Value;
-
-            if (acceptorSentRequest) {
-                request.Accept();
-            }
-
-            store.Create(result.Value!, token);
-            await unitOfWork.SaveChanges(token);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using General.Domain.Results;
 using System.Net;
 
-namespace Games.Domain.Games {
+namespace Games.Domain.Game {
     public record Price {
         public decimal Value { get; private set; }
 
@@ -10,14 +10,13 @@ namespace Games.Domain.Games {
             Value = value;
         }
 
-        internal static Result<Price> CreatePrice(decimal value) {
+        internal static Result<Price> Create(decimal value) {
             if (value < 0) {
                 var error = Error.Create(
                     title: "Price",
-                    description: "Price should be greater than zero, or equals zero (if entity is free)",
-                    code: HttpStatusCode.BadRequest);
+                    details: "Price should be greater than zero, or equals zero (if entity is free)");
 
-                return FailureResult.Create(error);
+                return FailureResult.Create(error, HttpStatusCode.BadRequest);
             }
 
             return new Price(value);

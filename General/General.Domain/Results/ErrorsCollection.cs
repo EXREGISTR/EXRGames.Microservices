@@ -5,7 +5,7 @@
         public ErrorsCollection() => errors = [];
         public ErrorsCollection(List<Error> other) => errors = other;
 
-        public bool NotEmpty() => errors.Count > 0;
+        public bool NotEmpty => errors.Count > 0;
         public IEnumerable<Error> Collection => errors;
 
         public void Append(Error error) => errors.Add(error);

@@ -1,4 +1,4 @@
-﻿using Games.Domain.Games;
+﻿using Games.Domain.Game;
 using Games.Domain.Tags;
 using Games.Domain.UserGames;
 using Games.Persistence.Repositories;

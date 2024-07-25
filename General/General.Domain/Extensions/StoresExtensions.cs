@@ -1,15 +1,16 @@
 ﻿using General.Domain.Contracts;
+using General.Domain.Results;
 using General.Domain.Specifications;
 using System.Linq.Expressions;
 
-namespace General.Domain {
+namespace General.Domain.Extensions {
     public static class StoresExtensions {
-        public static Task<IEnumerable<T>> FetchEntities<T>(
+        public static Task<Result<IEnumerable<T>>> FetchEntities<T>(
             this IStore<T> source, CancellationToken token = default)
             where T : IAggregateRoot
             => source.FetchEntities(Specification<T>.Empty, token);
 
-        public static Task<PagedEnumerable<T>> FetchEntities<T>(
+        public static Task<Result<PagedEnumerable<T>>> FetchEntities<T>(
             this IPaginableStore<T> source, int page, int size, CancellationToken token = default)
             where T : IAggregateRoot
             => source.FetchEntities(Specification<T>.Empty, page, size, token);
@@ -22,6 +23,6 @@ namespace General.Domain {
         public async static Task<bool> Exists<T>(
             this IStore<T> source, ISpecification<T> specification, CancellationToken token = default)
             where T : IAggregateRoot
-            => await source.Fetch(specification, token) != null;
+            => (await source.Fetch(specification, token)).IsSuccess;
     }
 }

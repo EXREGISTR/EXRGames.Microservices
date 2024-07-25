@@ -4,9 +4,8 @@ using System.Net;
 namespace General.Domain {
     public static class ErrorsCollectionExtensions {
         public static void Append(this ErrorsCollection source,
-            string title = "Error", string description = "Error has occurred", 
-            HttpStatusCode code = HttpStatusCode.InternalServerError) {
-            source.Append(Error.Create(title, description, code));
+            string title = "Error", string description = "No details") {
+            source.Append(Error.Create(title, description));
         }
     }
 }

@@ -7,7 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="ijv2oyr1.43y~" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\General.Domain\General.Domain.csproj" />
   </ItemGroup>
 
 </Project>
